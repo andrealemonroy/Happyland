@@ -10,7 +10,7 @@
       Esta página volverá automáticamente a una nueva página de registro en 3
       segundos
     </p>
-    <Button @click="toStart">Nuevo registro</Button>
+    <Button @click="toStart">Nuevo registro</Button>  
   </section>
 </template>
 <script>
