@@ -7,7 +7,7 @@
   </section>
 </template>
 <script>
-import jsPDF from "jsPDF";
+// import jsPDF from "jsPDF";
 export default {
   methods: {
     nextPage() {
