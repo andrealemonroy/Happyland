@@ -37,6 +37,4 @@ export default {
   font-family: "Montserrat-light";
   font-size: 22px;
 }
-
-
 </style>
