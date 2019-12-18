@@ -1,0 +1,49 @@
+@font-face {
+  font-family: Montserrat-light;
+  src: url("../fonts/Montserrat-Light_0.otf");
+}
+
+@font-face {
+  font-family: Montserrat-semibold;
+  src: url("../fonts/Montserrat-SemiBold.otf");
+}
+
+@font-face {
+  font-family: Montserrat-bold;
+  src: url("../fonts/Montserrat-Bold_0.otf");
+}
+
+@font-face {
+  font-family: Montserrat-extrabold;
+  src: url("../fonts/Montserrat-ExtraBold.otf");
+}
+
+.center {
+  text-align: center;
+  margin: auto;
+}
+
+.vertical-center {
+  align-items: center;
+  margin: auto;
+}
+h1 {
+  font-family: "Montserrat-bold";
+}
+.ivu-btn {
+  background-color: #338dc8;
+  color: #ffffff;
+  border-radius: 30px;
+  width: 300px;
+  height: 48px;
+  font-size: 22px;
+  vertical-align: center;
+}
+
+.top-60 {
+  margin-top: 60px;
+}
+
+.font-20 {
+  font-size: 20px;
+}
