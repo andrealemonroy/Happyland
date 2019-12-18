@@ -1,6 +1,6 @@
 <template>
   <section class="font-20 center top-60">
-    <Row><Col span="24">PDF</Col></Row>
+    <Row><Col span="24"></Col></Row>
     <Row type="flex" justify="end">
       <Button @click="nextPage">Click aquí para firmar</Button>
     </Row>
