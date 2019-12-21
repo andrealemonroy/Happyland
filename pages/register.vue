@@ -1,11 +1,17 @@
 <template>
   <section class="center top-60 font-20">
     <h1>INGRESE SU INFORMACIÓN AL REGISTRO</h1>
-    <Form ref="parentForm" :model="parentForm" :rules="validateForm" class="top-60">
+    <Form
+      ref="parentForm"
+      :model="parentForm"
+      :rules="validateForm"
+      class="top-60"
+      label-position="top"
+    >
       <Row type="flex" justify="space-around">
         <Col span="7">
-          <FormItem prop="name" label="Nombre"
-            ><Input v-model="parentForm.name" placeholder="ej. Andrea"></Input
+          <FormItem prop="names" label="Nombre"
+            ><Input v-model="parentForm.names" placeholder="ej. Andrea"></Input
           ></FormItem>
         </Col>
         <Col span="7">
@@ -17,8 +23,11 @@
           ></FormItem>
         </Col>
         <Col span="7">
-          <FormItem prop="dni" label="DNI"
-            ><Input v-model="parentForm.dni" placeholder="ej. 12345678"></Input
+          <FormItem prop="identityDocumentNumber" label="DNI"
+            ><Input
+              v-model="parentForm.identityDocumentNumber"
+              placeholder="ej. 12345678"
+            ></Input
           ></FormItem>
         </Col>
       </Row>
@@ -32,15 +41,18 @@
           ></FormItem>
         </Col>
         <Col span="7">
-          <FormItem prop="phone" label="Celular"
-            ><Input v-model="parentForm.phone" placeholder="987654321"></Input
+          <FormItem prop="phoneNumber" label="Celular"
+            ><Input
+              v-model="parentForm.phoneNumber"
+              placeholder="987654321"
+            ></Input
           ></FormItem>
         </Col>
         <Col span="7">
           <FormItem prop="gender" label="Género">
             <RadioGroup v-model="parentForm.gender">
-              <Radio>Femenino</Radio>
-              <Radio>Masculino</Radio>
+              <Radio label="female">Femenino</Radio>
+              <Radio label="male">Masculino</Radio>
             </RadioGroup>
           </FormItem>
         </Col>
@@ -48,28 +60,26 @@
       <Row type="flex" justify="space-around">
         <Col span="11">
           <FormItem
-            prop="viaProm"
+            prop="specialOffer"
             label="Me gustaría recibir ofertas especiales a través de:"
           >
-            <RadioGroup v-model="parentForm.proms">
-              <Radio>Email</Radio>
-              <Radio>Mensaje de texto</Radio>
+            <RadioGroup v-model="parentForm.specialOffer">
+              <Radio label="mail">Email</Radio>
+              <Radio label="sms">Mensaje de texto</Radio>
             </RadioGroup>
           </FormItem>
         </Col>
         <Col span="11"> </Col>
       </Row>
-      <!-- <FormItem prop="children" label="Cuántos niños registrarás?">
-      <Select placeholder="Selecciona"
-        ><Option>1</Option> <Option>2</Option></Select
-      ></FormItem
-    > -->
-      <Button @click="nextPage">Avanzar</Button>
+      <br />
+      <Button @click="nextPage">AVANZAR</Button>
     </Form>
   </section>
 </template>
 <script>
 import "~/assets/css/style.css";
+import * as Api from "@/server/index";
+import localStorage from "localStorage";
 export default {
   data() {
     const validatePhoneNumber = (rule, value, callback) => {
@@ -89,10 +99,7 @@ export default {
       const reg = new RegExp("^([A-Z0-9]{8,9})$");
       if (value === "") {
         callback(new Error("No puede estar vacío"));
-      } else if (
-        this.customerForm.identityDocumentType === "DNI" &&
-        (value.length !== 8 || isNaN(value))
-      ) {
+      } else if (value.length !== 8 || isNaN(value)) {
         callback(new Error("El número de documento debe ser de 8 números"));
       } else if (!reg.test(value)) {
         callback(new Error("Formato inválido"));
@@ -102,16 +109,16 @@ export default {
     };
     return {
       parentForm: {
-        name: "",
-        surname: "",
-        dni: "",
-        email: "",
-        phone: "",
-        gender: "",
-        proms: ""
+        names: "Andrea",
+        surname: "Monroy",
+        identityDocumentNumber: "76282636",
+        email: "andreale17@icloud.com",
+        phoneNumber: "978893562",
+        gender: "female",
+        specialOffer: "mail"
       },
       validateForm: {
-        name: [
+        names: [
           {
             required: true,
             message: "El nombre es requerido",
@@ -133,26 +140,7 @@ export default {
           },
           { type: "email", message: "Formato inválido", trigger: "blur" }
         ],
-        password: [
-          {
-            required: true,
-            message: "La clave es requerida",
-            trigger: "blur"
-          },
-          {
-            min: 6,
-            message: "Ingrese al menos 6 caracteres",
-            trigger: "blur"
-          }
-        ],
-        children: [
-          {
-            required: true,
-            message: "La cantidad de niños es requerido",
-            trigger: "blur"
-          }
-        ],
-        phone: [
+        phoneNumber: [
           { required: true, validator: validatePhoneNumber, trigger: "change" }
         ],
         dni: [
@@ -161,27 +149,31 @@ export default {
             validator: validateidentityDocumentNumber,
             trigger: "change"
           }
+        ],
+        gender: [
+          { required: true, message: "El género es requerido", trigger: "blur" }
+        ],
+        specialOffer: [
+          {
+            required: true,
+            message: "Este campo es requerido",
+            trigger: "blur"
+          }
         ]
       }
     };
   },
   methods: {
-    // validForm() {
-    //   return this.$refs["parentForm"].validate(async valid => {
-    //     debugger;
-    //     if (valid) {
-    //       return true;
-    //     }
-    //     return false;
-    //   });
-    // },
     async nextPage() {
       this.$refs["parentForm"].validate(async valid => {
         if (valid) {
-          debugger;
-          this.$router.push("/address");
+          try {
+            localStorage.setItem("data", JSON.stringify(this.parentForm));
+            this.$router.push("/address");
+          } catch (error) {
+            console.log(error);
+          }
         } else {
-          debugger;
           this.$Notice.error({
             title: "Hay campos inválidos en el formulario"
           });

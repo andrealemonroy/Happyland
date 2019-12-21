@@ -17,8 +17,7 @@
       ¿PARA QUIÉN FIRMAS EL CONTRATO DE RESPONSABILIDAD?
     </h3>
     <br />
-    <Button @click="nextPage">Para mí</Button> <br />
-    <Button @click="nextPage">Para mí y niños</Button>
+    <Button @click="nextPage">Continuar el registro</Button> <br />
   </section>
 </template>
 <script>

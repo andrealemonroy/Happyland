@@ -26,7 +26,8 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/iview'
+    '@/plugins/iview',
+    { src: '~/plugins/vuex-persist', ssr: false }
   ],
   /*
   ** Nuxt.js dev-modules
@@ -37,7 +38,11 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/axios',
   ],
+  axios: {
+    // proxyHeaders: false
+  },
   /*
   ** Build configuration
   */
@@ -45,7 +50,8 @@ module.exports = {
     /*
     ** You can extend webpack config here
     */
-    extend (config, ctx) {
+    vendor: ['jspdf'],
+    extend(config, ctx) {
     }
   }
 }

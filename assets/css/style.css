@@ -47,3 +47,19 @@ h1 {
 .font-20 {
   font-size: 20px;
 }
+
+.ivu-form-item-label {
+  font-size: 22;
+  font-family: "Montserrat-light";
+}
+
+.ivu-input {
+  height: 48px;
+  font-size: 24px;
+  font-family: "Montserrat-light";
+}
+
+.ivu-radio-wrapper {
+  font-size: 24px;
+  font-family: "Montserrat-light";
+}

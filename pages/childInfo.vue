@@ -31,23 +31,20 @@
         <Col span="7">
           <FormItem prop="gender" label="Género">
             <RadioGroup v-model="childForm.gender">
-              <Radio>Femenino</Radio>
-              <Radio>Masculino</Radio>
+              <Radio label="female">Femenino</Radio>
+              <Radio label="male">Masculino</Radio>
             </RadioGroup>
           </FormItem>
         </Col>
       </Row>
-      <!-- <FormItem prop="children" label="Cuántos niños registrarás?">
-      <Select placeholder="Selecciona"
-        ><Option>1</Option> <Option>2</Option></Select
-      ></FormItem
-    > -->
-      <Button @click="nextPage">Avanzar</Button>
+      <Button @click="nextPage">AVANZAR</Button>
     </Form>
   </section>
 </template>
 <script>
 import "~/assets/css/style.css";
+import * as Api from "@/server/index";
+import localStorage from "localStorage";
 export default {
   data() {
     const validatePhoneNumber = (rule, value, callback) => {
@@ -67,10 +64,7 @@ export default {
       const reg = new RegExp("^([A-Z0-9]{8,9})$");
       if (value === "") {
         callback(new Error("No puede estar vacío"));
-      } else if (
-        this.customerForm.identityDocumentType === "DNI" &&
-        (value.length !== 8 || isNaN(value))
-      ) {
+      } else if (value.length !== 8 || isNaN(value)) {
         callback(new Error("El número de documento debe ser de 8 números"));
       } else if (!reg.test(value)) {
         callback(new Error("Formato inválido"));
@@ -80,13 +74,10 @@ export default {
     };
     return {
       childForm: {
-        name: "",
-        surname: "",
-        dni: "",
-        email: "",
-        phone: "",
-        gender: "",
-        proms: ""
+        name: "Adriana",
+        surname: "Monroy",
+        dni: "76282636",
+        gender: "female"
       },
       validateForm: {
         name: [
@@ -103,60 +94,37 @@ export default {
             trigger: "blur"
           }
         ],
-        email: [
-          {
-            required: true,
-            message: "El correo electrónico es requerido",
-            trigger: "blur"
-          },
-          { type: "email", message: "Formato inválido", trigger: "blur" }
-        ],
-        password: [
-          {
-            required: true,
-            message: "La clave es requerida",
-            trigger: "blur"
-          },
-          {
-            min: 6,
-            message: "Ingrese al menos 6 caracteres",
-            trigger: "blur"
-          }
-        ],
-        children: [
-          {
-            required: true,
-            message: "La cantidad de niños es requerido",
-            trigger: "blur"
-          }
-        ],
-        phone: [
-          { required: true, validator: validatePhoneNumber, trigger: "change" }
-        ],
         dni: [
           {
             required: true,
             validator: validateidentityDocumentNumber,
             trigger: "change"
           }
+        ],
+        gender: [
+          { required: true, message: "El género es requerido", trigger: "blur" }
         ]
       }
     };
   },
   methods: {
-    // validForm() {
-    //   return this.$refs["childForm"].validate(async valid => {
-    //     debugger;
-    //     if (valid) {
-    //       return true;
-    //     }
-    //     return false;
-    //   });
-    // },
     async nextPage() {
       this.$refs["childForm"].validate(async valid => {
         if (valid) {
-          this.$router.push("/listChilds");
+          try {
+            const res = await Api.registerChild(this.childForm);
+            console.log("registro hijo" + res);
+            const idChild = res._id;
+            const idParent = JSON.parse(localStorage.getItem("data"))._id;
+            console.log("id Parent" + idParent);
+            const childToParent = await Api.registerChildToParent(
+              idCHild,
+              idParent
+            );
+            console.log("registro familiar - hijo" + childToParent);
+          } catch (error) {
+            console.log("error: " + error);
+          }
         } else {
           this.$Notice.error({
             title: "Hay campos inválidos en el formulario"

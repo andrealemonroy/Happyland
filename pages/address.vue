@@ -7,7 +7,7 @@
       :rules="validateForm"
       class="top-60"
     >
-      <Row align="center">
+      <Row>
         <Col span="8" offset="8">
           <FormItem prop="address" label="Dirección"
             ><Input
@@ -26,12 +26,14 @@
           >
         </Col>
       </Row>
-      <Button @click="nextPage">Avanzar</Button>
+      <Button @click="nextPage">AVANZAR</Button>
     </Form>
   </section>
 </template>
 <script>
 import "~/assets/css/style.css";
+import * as Api from "@/server/index";
+import localStorage from "localStorage";
 export default {
   data() {
     return {
@@ -61,7 +63,15 @@ export default {
     nextPage() {
       this.$refs["addressForm"].validate(async valid => {
         if (valid) {
-          this.$router.push("/addChild");
+          try {
+            const data = JSON.parse(localStorage.getItem("data"));
+            data.line = this.addressForm.address;
+            data.district = this.addressForm.district;
+            const res = await Api.registerParent(data);
+            this.$router.push("/addChild");
+          } catch (error) {
+            console.log(error);
+          }
         } else {
           this.$Notice.error({
             title: "Hay campos inválidos en el formulario"
