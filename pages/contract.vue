@@ -295,57 +295,57 @@
         </p>
       </Col>
     </Row> -->
+    <!-- <pdf
+      :page="page"
+      @num-pages="numPages = $event"
+      style="width:75%"
+      src="../static/happyland-contract.pdf"
+    ></pdf>
     <Row>
       <Col span="12" offset="12">
         <Button @click="downloadPDF">Click</Button>
         <Button @click="nextPage">Click aquí para firmar</Button>
       </Col>
-    </Row>
+    </Row> -->
+    <div>
+      <client-only placeholder="Loading...">
+        <pdf
+          class="pdf"
+          :src="require('@/static/happyland-contract.pdf')"
+          :page="1"
+        ></pdf>
+      </client-only>
+    </div>
   </section>
 </template>
 
 <script>
-import localStorage from "localStorage";
-import Vue from "vue";
-if (process.client) {
-  require("jspdf");
-  Vue.use(jsPDF);
-}
-
-export default {
-  data() {
-    return {
-      nameParent: "",
-      childs: []
-    };
-  },
-  methods: {
-    nextPage() {
-      this.$router.push("/signature");
-    },
-    downloadPDF() {
-      var doc = new jsPDF();
-      doc.text("Hello world!", 10, 10);
-      doc.save("a4.pdf");
-    }
-  },
-  created() {
-    if (JSON.parse(localStorage.getItem("data") != null)) {
-      const nameParent = JSON.parse(localStorage.getItem("data")).names;
-      this.childs = JSON.parse(localStorage.getItem("data")).childs;
-    }
-  }
-};
+// import localStorage from "localStorage";
+// import pdf from "vue-pdf";
+// Vue.component("pdf", pdf);
+// export default {
+//   components: {
+//     PlaceholderComponent,
+//     PDFFilePreview: () => {
+//       if (!process.client) {
+//         return {
+//           component: PlaceholderComponent
+//         };
+//       } else {
+//         return {
+//           component: import("~/components/PDFFilePreview")
+//         };
+//       }
+//     }
+//   }
+// };
+export default {};
 </script>
+
 <style scoped>
-.paragraph {
-  font-family: "Montserrat-light";
-  text-align: justify;
-  font-size: 18px;
-}
-h2 {
-  font-family: "Montserrat-bold";
-  text-align: center;
-  line-height: 2;
+.pdf {
+  border: 1px solid red;
+  width: 100%;
+  height: 100%;
 }
 </style>

@@ -29,6 +29,7 @@
     "nuxt": "^2.0.0",
     "pdfmake": "^0.1.63",
     "push-dir": "^0.4.1",
+    "vue-pdf": "^4.0.7",
     "vue-signature-pad": "1.1.17",
     "vuex-persist": "^2.2.0"
   },

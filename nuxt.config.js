@@ -1,4 +1,3 @@
-
 module.exports = {
   mode: 'universal',
   /*
@@ -27,7 +26,7 @@ module.exports = {
   */
   plugins: [
     '@/plugins/iview',
-    { src: '~/plugins/vuex-persist', ssr: false }
+    { src: '~/plugins/vue-pdf.js', ssr: false },
   ],
   /*
   ** Nuxt.js dev-modules
@@ -50,8 +49,14 @@ module.exports = {
     /*
     ** You can extend webpack config here
     */
-    vendor: ['jspdf'],
     extend(config, ctx) {
-    }
+      config.output.globalObject = 'this'
+      config.module.rules.push(
+        {
+          test: /\.pdf$/,
+          loader: 'url-loader'
+        }
+      )
+    },
   }
 }

@@ -9,7 +9,7 @@ let api = axios.create({
   // It can be convenient to set `baseURL` for an instance of axios to pass relative URLs
   // to methods of that instance.
   // baseURL: process.env.API_LOCATION,
-  baseURL: `${process.env.NUXT_ENV_API_URL}/${process.env.NUXT_ENV_API_VERSION}`,
+  baseURL: `${process.env.NUXT_ENV_API_URL}`,
   // `headers` are custom headers to be sent
   headers: {
     'content-type': 'application/json; charset=utf-8',
