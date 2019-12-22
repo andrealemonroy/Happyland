@@ -4,10 +4,6 @@
   "description": "registro happyland",
   "author": "Happyland",
   "private": true,
-  "engines": {
-    "node": "10.16.3",
-    "npm": "6.11.3"
-  },
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt generate",
@@ -20,6 +16,7 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.9.0",
+    "@nuxtjs/dotenv": "^1.4.1",
     "axios": "^0.19.0",
     "cross-env": "^5.2.0",
     "express": "^4.16.4",

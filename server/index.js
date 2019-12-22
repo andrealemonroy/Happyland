@@ -73,7 +73,8 @@ export const updateParent = async (id, form) => {
 }
 
 export const registerChildToParent = async (child, profileId) => {
-  return await api.post(`/fathers/child/${profileId}`, child)
+  const data = { child : child}
+  return await api.post(`/fathers/child/${profileId}`, data)
 }
 
 export const registerChild = async (child) => {

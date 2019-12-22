@@ -43,14 +43,14 @@ export default {
     },
     async nextPage() {
       try {
-        const idParent = JSON.parse(localStorage.getItem("data"))._id;
+        const idParent = localStorage.getItem("parentId");
         console.log("id Parent" + idParent);
-        const dataParent = await Api.getFatherById(idParent).data;
-        this.childs = dataParent.childs;
+        const dataParent = await Api.getFatherById(idParent);
+        this.childs = dataParent;
         console.log("hijos: " + this.childs);
-        this.$router.push("/contract");
+        //this.$router.push("/contract");
       } catch (error) {
-        console.log(error);
+        console.log(error.data);
         this.$Notice.error({
           title: "Hubo un error, por favor contacte a Soporte"
         });

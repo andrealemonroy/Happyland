@@ -68,6 +68,7 @@ export default {
             data.line = this.addressForm.address;
             data.district = this.addressForm.district;
             const res = await Api.registerParent(data);
+            localStorage.setItem("parentId", res.data._id);
             this.$router.push("/addChild");
           } catch (error) {
             console.log(error);

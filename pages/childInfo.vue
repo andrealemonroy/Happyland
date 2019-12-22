@@ -9,8 +9,8 @@
     >
       <Row type="flex" justify="space-around">
         <Col span="7">
-          <FormItem prop="name" label="Nombre"
-            ><Input v-model="childForm.name" placeholder="ej. Andrea"></Input
+          <FormItem prop="names" label="Nombre"
+            ><Input v-model="childForm.names" placeholder="ej. Andrea"></Input
           ></FormItem>
         </Col>
         <Col span="7">
@@ -22,8 +22,8 @@
           ></FormItem>
         </Col>
         <Col span="7">
-          <FormItem prop="dni" label="DNI del niño"
-            ><Input v-model="childForm.dni" placeholder="ej. 12345678"></Input
+          <FormItem prop="identityDocumentNumber" label="DNI del niño"
+            ><Input v-model="childForm.identityDocumentNumber" placeholder="ej. 12345678"></Input
           ></FormItem>
         </Col>
       </Row>
@@ -74,13 +74,13 @@ export default {
     };
     return {
       childForm: {
-        name: "Adriana",
+        names: "Adriana",
         surname: "Monroy",
-        dni: "76282636",
+        identityDocumentNumber: "76282636",
         gender: "female"
       },
       validateForm: {
-        name: [
+        names: [
           {
             required: true,
             message: "El nombre es requerido",
@@ -94,7 +94,7 @@ export default {
             trigger: "blur"
           }
         ],
-        dni: [
+        identityDocumentNumber: [
           {
             required: true,
             validator: validateidentityDocumentNumber,
@@ -111,21 +111,25 @@ export default {
     async nextPage() {
       this.$refs["childForm"].validate(async valid => {
         if (valid) {
-          try {
-            const res = await Api.registerChild(this.childForm);
-            console.log("registro hijo" + res);
-            const idChild = res._id;
-            const idParent = JSON.parse(localStorage.getItem("data"))._id;
-            console.log("id Parent" + idParent);
-            const childToParent = await Api.registerChildToParent(
-              idCHild,
-              idParent
-            );
-            console.log("registro familiar - hijo" + childToParent);
-          } catch (error) {
-            console.log("error: " + error);
-          }
-        } else {
+            Api.registerChild(this.childForm)
+              .then( res =>{
+                  console.log(res.data._id)
+                  if(res.status === 200){
+                    let idParent = localStorage.getItem("parentId")
+                    Api.registerChildToParent(res.data._id,idParent)
+                    .then( res =>{
+                      console.log('guardado con exito')
+                    })
+                     this.$router.push("/listChilds");
+                   }
+              })
+              .catch(error =>{
+                this.$Notice.error({
+                  title: "Error en el registro",
+                  desc: error.response.data.message
+                });
+              })
+        }else {
           this.$Notice.error({
             title: "Hay campos inválidos en el formulario"
           });
