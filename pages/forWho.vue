@@ -3,29 +3,39 @@
     <h1>Registro de responsabilidad</h1>
     <br />
     <h3>
-      ESTE PROCESO LE PERMITIRÁ FIRMAR DIGITALMENTE SU REGISTRO DE
+      ESTE PROCESO TE PERMITIRÁ FIRMAR DIGITALMENTE TU REGISTRO DE
       RESPONSABILIDAD.
     </h3>
     <br />
-    <p>
-      Tenga en cuenta que debe tener al menos 18 años para poder solicitar un
-      REGISTRO de responsabilidad. Si no tiene 18 años, solicite a sus padres o
-      tutor legal que completen este proceso.
+    <p class="justify" style="margin: 20px 100px">
+      Ten en cuenta que debes tener al menos 18 años para poder solicitar el
+      REGISTRO de responsabilidad. Si no tienes 18 años, solicita a tus padres o
+      tutor que completen este proceso.
     </p>
     <br />
-    <h3>
-      ¿PARA QUIÉN FIRMAS EL CONTRATO DE RESPONSABILIDAD?
-    </h3>
     <br />
-    <Button @click="nextPage">Continuar el registro</Button> <br />
+    <Row type="flex" justify="space-between">
+      <Col span="6"
+        ><Button @click="goBack">
+          <Icon type="ios-arrow-back" />Regresar</Button
+        >
+      </Col>
+      <Col span="6"
+        ><Button @click="nextPage">Continuar el registro</Button>
+      </Col>
+    </Row>
   </section>
 </template>
 <script>
 import "~/assets/css/style.css";
+
 export default {
   methods: {
     nextPage() {
       this.$router.push({ path: "/register" });
+    },
+    goBack() {
+      this.$router.push("/");
     }
   }
 };

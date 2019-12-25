@@ -69,22 +69,32 @@ export const registerParent = async (parentInfo) => {
 }
 
 export const updateParent = async (id, form) => {
-  return await api.put(`http://localhost:5000/api/v1/fathers/${id}`, form)
+  return await api.put(`/fathers/${id}`, form)
 }
 
-export const registerChildToParent = async (child, profileId) => {
-  const data = { child : child}
-  return await api.post(`/fathers/child/${profileId}`, data)
+export const registerChildToParent = async (data, profileId) => {
+  const newChild = {
+    child: data._id,
+    names: data.names,
+    surname: data.surname,
+    relative: data.relative
+  }
+  return await api.post(`/fathers/child/${profileId}`, newChild)
 }
 
 export const registerChild = async (child) => {
   return await api.post('/childs/register', child)
 }
 
+export const getFatherByEmail = async (email) => {
+  const parentEmail = { "email": email }
+  console.log(parentEmail)
+  return await api.post('/fathers/email/findByEmail', parentEmail)
+}
 export const getFatherById = async (id) => {
   let res = null
   await api.get(`/fathers/${id}`).then(function (rs) {
-    res = rs.data
+    res = rs
   })
   return res
 }
@@ -93,4 +103,13 @@ export const deleteChild = async (idCHild) => {
   const endpoint = `http://localhost:5000/api/v1/childs/${idCHild}`
   return await api.delete(endpoint)
 }
+
+export const sendEmail = async (email, random) => {
+  const dataEmail = {
+    email: email.toString(),
+    message: random.toString()
+  }
+  return await api.post(`/fathers/sendEmail`, dataEmail)
+}
+
 export default api

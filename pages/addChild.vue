@@ -1,6 +1,7 @@
 <template>
   <section class="center top-60">
     <h1>¿LE GUSTARÍA AGREGAR UN NIÑO?</h1>
+    <br />
     <Button @click="childInfo">Sí</Button>
     <Button @click="listChilds">No</Button>
   </section>

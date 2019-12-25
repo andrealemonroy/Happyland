@@ -1,5 +1,10 @@
 <template>
-  <img src="../assets/images/logo.svg" />
+  <Row type="flex" justify="center">
+    <img
+      style="margin: auto; text-align: center"
+      src="../assets/images/logo-happy.jpg"
+    />
+  </Row>
 </template>
 <style>
 .NuxtLogo {

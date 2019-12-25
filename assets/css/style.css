@@ -34,9 +34,9 @@ h1 {
   background-color: #338dc8;
   color: #ffffff;
   border-radius: 30px;
-  width: 300px;
+  width: 180px;
   height: 48px;
-  font-size: 22px;
+  font-size: 14px;
   vertical-align: center;
 }
 
@@ -59,7 +59,26 @@ h1 {
   font-family: "Montserrat-light";
 }
 
+.ivu-select,
+.ivu-select-selection,
+.ivu-select-selected-value {
+  height: 48px;
+  font-size: 24px;
+  font-family: "Montserrat-light";
+}
+
 .ivu-radio-wrapper {
   font-size: 24px;
   font-family: "Montserrat-light";
+}
+
+.scroll {
+  overflow-x: scroll;
+  width: 90vw;
+  height: 90vh;
+  line-height: 1.5;
+}
+
+.justify {
+  text-align: justify;
 }

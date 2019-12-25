@@ -58,7 +58,7 @@
         </Col>
       </Row>
       <Row type="flex" justify="space-around">
-        <Col span="11">
+        <Col span="7">
           <FormItem
             prop="specialOffer"
             label="Me gustaría recibir ofertas especiales a través de:"
@@ -69,10 +69,31 @@
             </RadioGroup>
           </FormItem>
         </Col>
-        <Col span="11"> </Col>
+        <Col span="7">
+          <FormItem prop="birthday" label="Fecha de nacimiento">
+            <DatePicker
+              type="date"
+              :options="birthPickerOptions"
+              :start-date="startDateBirthCalendar"
+              :editable="true"
+              format="yyyy-MM-dd"
+              :confirm="false"
+              placeholder="Fecha de nacimiento"
+              v-model="parentForm.birthday"
+            ></DatePicker>
+          </FormItem>
+        </Col>
+        <Col span="7"></Col>
       </Row>
       <br />
-      <Button @click="nextPage">AVANZAR</Button>
+      <Row type="flex" justify="space-between">
+        <Col span="6"
+          ><Button @click="goBack">
+            <Icon type="ios-arrow-back" />Regresar</Button
+          >
+        </Col>
+        <Col span="6"><Button @click="nextPage">Siguiente</Button> </Col>
+      </Row>
     </Form>
   </section>
 </template>
@@ -80,6 +101,7 @@
 import "~/assets/css/style.css";
 import * as Api from "@/server/index";
 import localStorage from "localStorage";
+import moment from "moment";
 export default {
   data() {
     const validatePhoneNumber = (rule, value, callback) => {
@@ -107,15 +129,25 @@ export default {
         callback();
       }
     };
+    const isAdult = (rule, value, callback) => {
+      if (value === "" || typeof value === "undefined") {
+        callback(new Error("Fecha de nacimiento es requerida"));
+      } else if (moment(value).isAfter(moment().subtract(18, "years"))) {
+        callback(new Error("No cumple mayoría de edad (18)"));
+      } else {
+        callback();
+      }
+    };
     return {
       parentForm: {
-        names: "Andrea",
-        surname: "Monroy",
-        identityDocumentNumber: "76282636",
-        email: "andreale17@icloud.com",
-        phoneNumber: "978893562",
-        gender: "female",
-        specialOffer: "mail"
+        names: "",
+        surname: "",
+        identityDocumentNumber: "",
+        birthday: "",
+        email: "",
+        phoneNumber: "",
+        gender: "",
+        specialOffer: ""
       },
       validateForm: {
         names: [
@@ -143,7 +175,7 @@ export default {
         phoneNumber: [
           { required: true, validator: validatePhoneNumber, trigger: "change" }
         ],
-        dni: [
+        identityDocumentNumber: [
           {
             required: true,
             validator: validateidentityDocumentNumber,
@@ -159,6 +191,14 @@ export default {
             message: "Este campo es requerido",
             trigger: "blur"
           }
+        ],
+        birthday: [
+          {
+            required: true,
+            type: "date",
+            validator: isAdult,
+            trigger: "change"
+          }
         ]
       }
     };
@@ -171,7 +211,9 @@ export default {
             localStorage.setItem("data", JSON.stringify(this.parentForm));
             this.$router.push("/address");
           } catch (error) {
-            console.log(error);
+            this.$Notice.error({
+              title: "No se pudo completar el registro"
+            });
           }
         } else {
           this.$Notice.error({
@@ -179,6 +221,9 @@ export default {
           });
         }
       });
+    },
+    goBack() {
+      this.$router.push("/forWho");
     }
   }
 };

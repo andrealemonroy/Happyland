@@ -1,11 +1,12 @@
 <template>
-  <section class="center top-60 font-20">
+  <section class="center top-60 font-20 scroll">
     <h1>INGRESA LA INFORMACION DEL NIÑO</h1>
     <Form
       ref="childForm"
       :model="childForm"
       :rules="validateForm"
       class="top-60"
+      label-position="top"
     >
       <Row type="flex" justify="space-around">
         <Col span="7">
@@ -23,11 +24,32 @@
         </Col>
         <Col span="7">
           <FormItem prop="identityDocumentNumber" label="DNI del niño"
-            ><Input v-model="childForm.identityDocumentNumber" placeholder="ej. 12345678"></Input
+            ><Input
+              v-model="childForm.identityDocumentNumber"
+              placeholder="ej. 12345678"
+            ></Input
           ></FormItem>
         </Col>
       </Row>
       <Row type="flex" justify="space-around">
+        <Col span="7">
+          <FormItem prop="relative" label="Parentesco">
+            <Select placeholder="Seleccione" v-model="childForm.relative">
+              <Option value="Hijo(a)">Hijo(a)</Option>
+              <Option value="Hermano(a)">Hermano(a)</Option>
+              <Option value="Primo(a)">Primo(a)</Option>
+              <Option value="Sobrino(a)">Sobrino(a)</Option>
+              <Option value="Nieto(a)">Nieto(a)</Option>
+              <Option value="Otro">Otro</Option>
+            </Select>
+          </FormItem>
+          <FormItem v-if="otherRelative" prop="relative" label="Parentesco">
+            <Input
+              placeholder="Ingrese parentesco"
+              v-model="otherRelativeModel"
+            />
+          </FormItem>
+        </Col>
         <Col span="7">
           <FormItem prop="gender" label="Género">
             <RadioGroup v-model="childForm.gender">
@@ -36,8 +58,9 @@
             </RadioGroup>
           </FormItem>
         </Col>
+        <Col span="7"> </Col>
       </Row>
-      <Button @click="nextPage">AVANZAR</Button>
+      <Button @click="nextPage">Siguiente</Button>
     </Form>
   </section>
 </template>
@@ -74,11 +97,13 @@ export default {
     };
     return {
       childForm: {
-        names: "Adriana",
-        surname: "Monroy",
-        identityDocumentNumber: "76282636",
-        gender: "female"
+        names: "",
+        surname: "",
+        identityDocumentNumber: "",
+        gender: ""
       },
+      otherRelative: false,
+      otherRelativeModel: "",
       validateForm: {
         names: [
           {
@@ -103,6 +128,13 @@ export default {
         ],
         gender: [
           { required: true, message: "El género es requerido", trigger: "blur" }
+        ],
+        relative: [
+          {
+            required: true,
+            message: "El parentesco es requerido",
+            trigger: "blur"
+          }
         ]
       }
     };
@@ -111,25 +143,40 @@ export default {
     async nextPage() {
       this.$refs["childForm"].validate(async valid => {
         if (valid) {
-            Api.registerChild(this.childForm)
-              .then( res =>{
-                  console.log(res.data._id)
-                  if(res.status === 200){
-                    let idParent = localStorage.getItem("parentId")
-                    Api.registerChildToParent(res.data._id,idParent)
-                    .then( res =>{
-                      console.log('guardado con exito')
-                    })
-                     this.$router.push("/listChilds");
-                   }
-              })
-              .catch(error =>{
+          if (this.childForm.relative == "Otro") {
+            this.otherRelative = true;
+            delete this.childForm.relative;
+            if (this.otherRelativeModel != "") {
+              this.childForm.relative = this.otherRelativeModel;
+            } else {
+              this.$Notice.error({
+                title: "Error en el registro",
+                desc: "Debe completar el parentesco"
+              });
+            }
+          }
+          Api.registerChild(this.childForm)
+            .then(res => {
+              if (res.status === 200) {
+                const idParent = localStorage.getItem("parentId");
+                Api.registerChildToParent(res.data, idParent).then(res => {
+                  console.log("guardado con éxito");
+                  this.$router.push("/listChilds");
+                });
+              } else {
                 this.$Notice.error({
                   title: "Error en el registro",
-                  desc: error.response.data.message
+                  desc: "Ya existe el registro del niño"
                 });
-              })
-        }else {
+              }
+            })
+            .catch(error => {
+              this.$Notice.error({
+                title: "Error en el registro",
+                desc: "Ya existe el registro del niño"
+              });
+            });
+        } else {
           this.$Notice.error({
             title: "Hay campos inválidos en el formulario"
           });

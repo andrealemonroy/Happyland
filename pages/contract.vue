@@ -1,6 +1,6 @@
 <template>
-  <section class="font-20 center top-60">
-    <!-- <Row type="flex" justify="center" class="top-60">
+  <section class="font-20 justify center top-60 scroll">
+    <Row type="flex" justify="center" class="top-60">
       <Col span="20">
         <h1>
           Acuerdo del participante, liberación y asunción de riesgos (El
@@ -280,34 +280,50 @@
           RENUNCIA PREVIENE Y PROHIBE CUALQUIER RECUPERACIÓN DE DINERO DE
           CUALQUIER ENTIDAD RELACIONADA CON EL Sociedad HAPPYLAND Perú S.A.
           <br />
-          Padre / tutor legal / poder notarial / participante (si tiene 18 años
-          o más): {{ nameParent }}
           <br />
-          Nombre del niño:
+          <strong
+            >Padre / tutor legal / poder notarial / participante (si tiene 18
+            años o más): </strong
+          >{{ nameParent }}
           <br />
-          <List
-            ><ListItem v-for="child in childs" :key="child._id">{{
-              child._id
-            }}</ListItem></List
-          >
+          <strong>
+            Nombre de (los) niño(s):
+          </strong>
           <br />
-          Fecha de Nacimiento:
+          <List class="list">
+            <ListItem v-for="child in childs" :key="child._id"
+              >{{ child.names }} {{ child.surname }}
+            </ListItem>
+          </List>
+          <br />
         </p>
       </Col>
-    </Row> -->
+    </Row>
+    <Row>
+      <Col span="12" offset="2">
+        <Form ref="form" :model="form" :rules="validateForm">
+          <FormItem prop="terms">
+            <Checkbox class="font-20" v-model="form.terms"
+              >Estoy de acuerdo con los términos y condiciones del
+              contrato.</Checkbox
+            >
+          </FormItem>
+        </Form>
+      </Col>
+    </Row>
     <!-- <pdf
       :page="page"
       @num-pages="numPages = $event"
       style="width:75%"
       src="../static/happyland-contract.pdf"
-    ></pdf>
+    ></pdf>-->
     <Row>
-      <Col span="12" offset="12">
-        <Button @click="downloadPDF">Click</Button>
+      <Col span="5" offset="19">
+        <!-- <Button @click="downloadPDF">Click</Button> -->
         <Button @click="nextPage">Click aquí para firmar</Button>
       </Col>
-    </Row> -->
-    <div>
+    </Row>
+    <!-- <div>
       <client-only placeholder="Loading...">
         <pdf
           class="pdf"
@@ -315,31 +331,60 @@
           :page="1"
         ></pdf>
       </client-only>
-    </div>
+    </div> -->
   </section>
 </template>
 
 <script>
-// import localStorage from "localStorage";
-// import pdf from "vue-pdf";
-// Vue.component("pdf", pdf);
-// export default {
-//   components: {
-//     PlaceholderComponent,
-//     PDFFilePreview: () => {
-//       if (!process.client) {
-//         return {
-//           component: PlaceholderComponent
-//         };
-//       } else {
-//         return {
-//           component: import("~/components/PDFFilePreview")
-//         };
-//       }
-//     }
-//   }
-// };
-export default {};
+import localStorage from "localStorage";
+import * as Api from "@/server/index";
+import "~/assets/css/style.css";
+export default {
+  data() {
+    const validateTerms = (rule, value, callback) => {
+      if (value == false || !value) {
+        callback(new Error("Es obligatorio"));
+      } else {
+        callback();
+      }
+    };
+    return {
+      nameParent: "",
+      childs: [],
+      data: {},
+      form: {
+        terms: false
+      }, // single checkbox value
+      validateForm: {
+        terms: [{ validator: validateTerms, trigger: "change" }]
+      }
+    };
+  },
+  methods: {
+    nextPage() {
+      this.$refs["form"].validate(async valid => {
+        if (valid) {
+          this.$router.push("/signature");
+        } else {
+          this.$Notice.error({
+            title: "Error de registro",
+            desc: "Debe aceptar términos y condiciones para poder continuar"
+          });
+        }
+      });
+    },
+    async getChilds() {
+      const idParent = localStorage.getItem("parentId");
+      this.data = (await Api.getFatherById(idParent)).data;
+      this.nameParent = this.data.names + " " + this.data.surname;
+      this.childs = this.data.childs;
+      console.log(this.childs);
+    }
+  },
+  async created() {
+    return await this.getChilds();
+  }
+};
 </script>
 
 <style scoped>
