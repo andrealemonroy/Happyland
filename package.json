@@ -21,7 +21,7 @@
     "cross-env": "^5.2.0",
     "express": "^4.16.4",
     "iview": "^3.1.5",
-    "jspdf": "^1.5.3",
+    "jspdf": "^2.3.1",
     "localStorage": "^1.0.4",
     "moment": "^2.24.0",
     "nuxt": "^2.0.0",
