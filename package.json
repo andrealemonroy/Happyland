@@ -23,7 +23,7 @@
     "iview": "^3.1.5",
     "jspdf": "^1.5.3",
     "localStorage": "^1.0.4",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "nuxt": "^2.0.0",
     "pdfmake": "^0.1.63",
     "push-dir": "^0.4.1",
